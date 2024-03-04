@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import reg.example.SecServer.entity.AuthorEntity;
 import reg.example.SecServer.entity.BookEntity;
 import reg.example.SecServer.response.BaseResponse;
+import reg.example.SecServer.response.BookListResponse;
 import reg.example.SecServer.response.DataResponse;
 import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.BookService;
@@ -118,5 +119,10 @@ public class BookController {
         } catch (RuntimeException e) {
             return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<BookListResponse> getBy_publisher(@RequestParam String title, @RequestParam String city) {
+        return ResponseEntity.ok( new BookListResponse(true, "Книга найдена",service.findByPublisher(title,city)) );
     }
 }

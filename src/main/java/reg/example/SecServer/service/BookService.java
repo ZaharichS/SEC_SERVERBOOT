@@ -36,4 +36,9 @@ public class BookService {
     public void delete(Long id) {
         repo.deleteById(id);
     }
+
+    // Поиск по двум пар-ам
+    public Iterable<BookEntity> findByPublisher(String title, String city) {
+        return repo.findDistinctByPublishing_PublisherOrPublisher_City(title, city);
+    }
 }
