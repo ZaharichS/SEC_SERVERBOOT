@@ -11,6 +11,8 @@ import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.GenreService;
 import reg.example.SecServer.service.PublisherService;
 
+import java.util.List;
+
 @RequestMapping("api/v1/publisher")
 @RestController
 @AllArgsConstructor
@@ -22,49 +24,53 @@ public class PublisherController {
         return ResponseEntity.ok(new ListResponse<PublisherEntity>(true,"Издания", service.getAll()));
     }
 
-    @GetMapping("/find{id}")
-    public ResponseEntity<DataResponse<PublisherEntity>> getBy_id(@RequestParam Long id) {
+    @GetMapping
+    public  ResponseEntity<DataResponse<PublisherEntity>> by_id(@RequestParam Long id) {
         try {
             if (service.findById(id).isPresent()) {
-                return ResponseEntity.ok(new DataResponse<PublisherEntity>(true, "Издания по id = " + id, service.findById(id).orElseThrow()));
+                return ResponseEntity.ok(new DataResponse<PublisherEntity>(true, "Найдено издание", service.findById(id).orElseThrow()));
             } else {
-                return ResponseEntity.badRequest().body(new DataResponse<PublisherEntity>(false, "Издания не найдены", service.findById(id).orElseThrow()));
+                return ResponseEntity.ok(new DataResponse<PublisherEntity>(false, "Издание не найдено", service.findById(id).orElseThrow()));
             }
-        } catch (Exception e ) {
-            return ResponseEntity.badRequest().body(new DataResponse<PublisherEntity>(false, "Издания не найдены", service.findById(id).orElseThrow()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new DataResponse<PublisherEntity>(false, e.getMessage(),service.findById(id).orElseThrow()));
         }
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<DataResponse<PublisherEntity>> save(@RequestBody PublisherEntity publisher) {
-        return ResponseEntity.ok(new DataResponse<PublisherEntity>(true, "Издание сохранено", service.save(publisher)));
+    @PostMapping
+    public ResponseEntity<BaseResponse> save(@RequestBody PublisherEntity publisher) {
+        try {
+            return ResponseEntity.ok(new DataResponse<PublisherEntity>(true, "Издание сохранен", service.save(publisher)));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
+        }
     }
 
-    @PutMapping("/update")
-    private ResponseEntity<BaseResponse> updateBy_body(@RequestBody PublisherEntity publisher) {
+    @PutMapping
+    public ResponseEntity<BaseResponse> update(@RequestBody PublisherEntity publisher) {
         try {
             if (service.findById(publisher.getId()).isPresent()) {
-                service.save(publisher);
+                service.update(publisher);
                 return ResponseEntity.ok(new BaseResponse(true, "Издание обновлено"));
             } else {
-                return ResponseEntity.badRequest().body(new BaseResponse(false, "Издание не было обновлено"));
+                return ResponseEntity.ok(new BaseResponse(false, "Издание не было найдено"));
             }
-        } catch (Exception e ) {
-            return ResponseEntity.badRequest().body(new BaseResponse(false, "Издание не было обновлено"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
         }
     }
 
-    @DeleteMapping("/del/{id}")
-    public ResponseEntity<BaseResponse> deleteBy_id(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<BaseResponse> deleteBy_id(@RequestParam Long id) {
         try {
             if (service.findById(id).isPresent()) {
                 service.delete(id);
                 return ResponseEntity.ok(new BaseResponse(true, "Издание удалено"));
             } else {
-                return ResponseEntity.badRequest().body(new BaseResponse(false, "Издание не было удалено"));
+                return ResponseEntity.ok(new BaseResponse(true, "Издание не было найдено"));
             }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new BaseResponse(false, "Издание не было удалено" + e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
         }
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reg.example.SecServer.entity.BookEntity;
 import reg.example.SecServer.entity.CityEntity;
+import reg.example.SecServer.entity.PublisherEntity;
 import reg.example.SecServer.response.BaseResponse;
 import reg.example.SecServer.response.DataResponse;
 import reg.example.SecServer.response.ListResponse;
@@ -22,49 +23,53 @@ public class CityController {
         return ResponseEntity.ok(new ListResponse<CityEntity>(true,"Города", service.getAll()));
     }
 
-    @GetMapping("/find{id}")
-    public ResponseEntity<DataResponse<CityEntity>> getBy_id(@RequestParam Long id) {
+    @GetMapping
+    public ResponseEntity<DataResponse<CityEntity>> by_id(@RequestParam Long id) {
         try {
             if (service.findById(id).isPresent()) {
-                return ResponseEntity.ok(new DataResponse<CityEntity>(true, "Города по id = " + id, service.findById(id).orElseThrow()));
+                return ResponseEntity.ok(new DataResponse<CityEntity>(true, "Найден город", service.findById(id).orElseThrow()));
             } else {
-                return ResponseEntity.badRequest().body(new DataResponse<CityEntity>(false, "Города не найдены", service.findById(id).orElseThrow()));
+                return ResponseEntity.ok(new DataResponse<CityEntity>(false, "Город не найден", service.findById(id).orElseThrow()));
             }
-        } catch (Exception e ) {
-            return ResponseEntity.badRequest().body(new DataResponse<CityEntity>(false, "Города не найдены", service.findById(id).orElseThrow()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new DataResponse<CityEntity>(false, e.getMessage(), service.findById(id).orElseThrow()));
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<DataResponse<CityEntity>> save(@RequestBody CityEntity city) {
-        return ResponseEntity.ok(new DataResponse<CityEntity>(true, "Город сохранен", service.save(city)));
+        try {
+            return ResponseEntity.ok(new DataResponse<CityEntity>(true, "Город сохранен", service.save(city)));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new DataResponse<CityEntity>(false, e.getMessage()));
+        }
     }
 
-    @PutMapping("/update")
-    private ResponseEntity<BaseResponse> updateBy_body(@RequestBody CityEntity city) {
+    @PutMapping
+    public ResponseEntity<BaseResponse> update(@RequestBody CityEntity city) {
         try {
             if (service.findById(city.getId()).isPresent()) {
-                service.save(city);
-                return ResponseEntity.ok(new BaseResponse(true, "Город был обновлен"));
+                service.update(city);
+                return ResponseEntity.ok(new BaseResponse(true, "Город обновлен"));
             } else {
-                return ResponseEntity.badRequest().body(new BaseResponse(false, "Город не был обновлен"));
+                return ResponseEntity.ok(new BaseResponse(false, "Город не был найден"));
             }
-        } catch (Exception e ) {
-            return ResponseEntity.badRequest().body(new BaseResponse(false, "Город не был обновлен"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
         }
     }
 
-    @DeleteMapping("/del/{id}")
-    public ResponseEntity<BaseResponse> deleteBy_id(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<BaseResponse> deleteBy_id(@RequestParam Long id) {
         try {
             if (service.findById(id).isPresent()) {
                 service.delete(id);
                 return ResponseEntity.ok(new BaseResponse(true, "Город удален"));
             } else {
-                return ResponseEntity.badRequest().body(new BaseResponse(false, "Город не был удален"));
+                return ResponseEntity.ok(new BaseResponse(true, "Город не был найден"));
             }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new BaseResponse(false, "Город не был удален" + e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
         }
     }
 }

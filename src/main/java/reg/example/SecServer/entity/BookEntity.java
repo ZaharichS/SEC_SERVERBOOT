@@ -1,6 +1,7 @@
 package reg.example.SecServer.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,9 @@ public class BookEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+    private String year;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -36,6 +40,4 @@ public class BookEntity {
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private GenreEntity genre;
-
-    private String year;
 }

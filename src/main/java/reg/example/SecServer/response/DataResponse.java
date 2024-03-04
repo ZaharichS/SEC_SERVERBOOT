@@ -16,4 +16,8 @@ public class DataResponse<T> extends BaseResponse {
         super(status, status_text);
         this.data = data;
     }
+
+    public DataResponse(boolean status, String status_text) {
+        super(status, status_text);
+    }
 }

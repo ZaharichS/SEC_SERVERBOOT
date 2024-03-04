@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reg.example.SecServer.entity.CityEntity;
 import reg.example.SecServer.entity.GenreEntity;
+import reg.example.SecServer.entity.PublisherEntity;
 import reg.example.SecServer.response.BaseResponse;
 import reg.example.SecServer.response.DataResponse;
 import reg.example.SecServer.response.ListResponse;
@@ -22,49 +23,53 @@ public class GenreController {
         return ResponseEntity.ok(new ListResponse<GenreEntity>(true,"Жанры", service.getAll()));
     }
 
-    @GetMapping("/find{id}")
-    public ResponseEntity<DataResponse<GenreEntity>> getBy_id(@RequestParam Long id) {
+    @GetMapping
+    public ResponseEntity<DataResponse<GenreEntity>> by_id(@RequestParam Long id) {
         try {
             if (service.findById(id).isPresent()) {
-                return ResponseEntity.ok(new DataResponse<GenreEntity>(true, "Жанры по id = " + id, service.findById(id).orElseThrow()));
+                return ResponseEntity.ok(new DataResponse<GenreEntity>(true, "Найден жанр", service.findById(id).orElseThrow()));
             } else {
-                return ResponseEntity.badRequest().body(new DataResponse<GenreEntity>(false, "Жанры не найдены", service.findById(id).orElseThrow()));
+                return ResponseEntity.ok(new DataResponse<GenreEntity>(false, "Жанр не найден", service.findById(id).orElseThrow()));
             }
-        } catch (Exception e ) {
-            return ResponseEntity.badRequest().body(new DataResponse<GenreEntity>(false, "Жанры не найдены", service.findById(id).orElseThrow()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new DataResponse<GenreEntity>(false, e.getMessage(),service.findById(id).orElseThrow()));
         }
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<DataResponse<GenreEntity>> save(@RequestBody GenreEntity genre) {
-        return ResponseEntity.ok(new DataResponse<GenreEntity>(true, "Жанр сохранен", service.save(genre)));
+    @PostMapping
+    public ResponseEntity<BaseResponse> save(@RequestBody GenreEntity genre) {
+        try {
+            return ResponseEntity.ok(new DataResponse<GenreEntity>(true, "Жанр сохранен", service.save(genre)));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
+        }
     }
 
-    @PutMapping("/update")
-    private ResponseEntity<BaseResponse> updateBy_body(@RequestBody GenreEntity genre) {
+    @PutMapping
+    public ResponseEntity<BaseResponse> update(@RequestBody GenreEntity genre) {
         try {
             if (service.findById(genre.getId()).isPresent()) {
-                service.save(genre);
-                return ResponseEntity.ok(new BaseResponse(true, "Жанр был обновлен"));
+                service.update(genre);
+                return ResponseEntity.ok(new BaseResponse(true, "Жанр обновлен"));
             } else {
-                return ResponseEntity.badRequest().body(new BaseResponse(false, "Жанр не был обновлен"));
+                return ResponseEntity.ok(new BaseResponse(false, "Жанр не был найден"));
             }
-        } catch (Exception e ) {
-            return ResponseEntity.badRequest().body(new BaseResponse(false, "Жанр не был обновлен"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
         }
     }
 
-    @DeleteMapping("/del/{id}")
-    public ResponseEntity<BaseResponse> deleteBy_id(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<BaseResponse> deleteBy_id(@RequestParam Long id) {
         try {
             if (service.findById(id).isPresent()) {
                 service.delete(id);
                 return ResponseEntity.ok(new BaseResponse(true, "Жанр удален"));
             } else {
-                return ResponseEntity.badRequest().body(new BaseResponse(false, "Жанр не был удален"));
+                return ResponseEntity.ok(new BaseResponse(true, "Жанр не был найден"));
             }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new BaseResponse(false, "Жанр не был удален" + e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new BaseResponse(false, e.getMessage()));
         }
     }
 }

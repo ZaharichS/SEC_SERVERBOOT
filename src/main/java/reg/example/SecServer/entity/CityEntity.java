@@ -1,5 +1,6 @@
 package reg.example.SecServer.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -25,6 +26,7 @@ public class CityEntity {
     @Pattern(regexp = "[А-Я][а-я]{1,20}")
     private String title;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
     private List<PublisherEntity> publisher;
 }

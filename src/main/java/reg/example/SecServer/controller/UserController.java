@@ -11,6 +11,8 @@ import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.PublisherService;
 import reg.example.SecServer.service.UserService;
 
+// ОБНОВИТЬ ДАННЫЙ КЛАСС
+// СТАРЫЕ МЕТОДЫ
 @RequestMapping("api/v1/user")
 @RestController
 @AllArgsConstructor

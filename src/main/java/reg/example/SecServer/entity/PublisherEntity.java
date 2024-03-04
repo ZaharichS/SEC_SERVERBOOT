@@ -1,6 +1,7 @@
 package reg.example.SecServer.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ public class PublisherEntity {
     @JoinColumn(name = "city_id")
     private CityEntity city;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
     private List<BookEntity> books;
 }
