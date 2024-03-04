@@ -29,4 +29,8 @@ public class BookService {
     public void update(BookEntity data) {
         repo.save(data);
     }
+
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
 }

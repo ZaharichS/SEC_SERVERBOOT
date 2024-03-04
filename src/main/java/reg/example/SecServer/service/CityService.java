@@ -29,4 +29,8 @@ public class CityService {
     public void update(CityEntity data) {
         repo.save(data);
     }
+
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
 }

@@ -20,33 +20,49 @@ public class AuthorController {
         return ResponseEntity.ok(new ListResponse<AuthorEntity>(true,"Авторы", service.getAll()));
     }
 
-    @GetMapping
+    @GetMapping("/find{id}")
     public ResponseEntity<DataResponse<AuthorEntity>> getBy_id(@RequestParam Long id) {
-        // Нет проверки на существующего автора с таким id
-        return ResponseEntity.ok(new DataResponse<AuthorEntity>(true, "Автор по id = " + id, service.findById(id).orElseThrow()));
+        try {
+            if (service.findById(id).isPresent()) {
+                return ResponseEntity.ok(new DataResponse<AuthorEntity>(true, "Автор по id = " + id, service.findById(id).orElseThrow()));
+            } else {
+            return ResponseEntity.badRequest().body(new DataResponse<AuthorEntity>(false, "Автор не найден", service.findById(id).orElseThrow()));
+            }
+        } catch (Exception e ) {
+            return ResponseEntity.badRequest().body(new DataResponse<AuthorEntity>(false, "Автор не найден", service.findById(id).orElseThrow()));
+        }
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<DataResponse<AuthorEntity>> save(@RequestBody AuthorEntity author) {
         return ResponseEntity.ok(new DataResponse<AuthorEntity>(true, "Автор сохранен", service.save(author)));
     }
 
-    @PutMapping
+    @PutMapping("/update")
     private ResponseEntity<BaseResponse> updateBy_body(@RequestBody AuthorEntity author) {
-        // Обновляем автора
-        // Нет проверки на существующего автора с таким id
-        service.update(author);
-        return ResponseEntity.ok(new BaseResponse(true, "Автор был обновлен"));
+        try {
+            if (service.findById(author.getId()).isPresent()) {
+                service.save(author);
+                return ResponseEntity.ok(new BaseResponse(true, "Автор был обновлен"));
+            } else {
+                return ResponseEntity.badRequest().body(new BaseResponse(false, "Автор не был обновлен"));
+            }
+        } catch (Exception e ) {
+            return ResponseEntity.badRequest().body(new BaseResponse(false, "Автор не был обновлен"));
+        }
     }
 
     @DeleteMapping("/del/{id}")
     public ResponseEntity<BaseResponse> deleteBy_id(@PathVariable Long id) {
         try {
-            // Нет проверки на существующего автора с таким id
-            service.delele(id);
-            return ResponseEntity.ok(new BaseResponse(true, "Автор был удален"));
+            if (service.findById(id).isPresent()) {
+                service.delete(id);
+                return ResponseEntity.ok(new BaseResponse(true, "Автор был удален"));
+            } else {
+                return ResponseEntity.badRequest().body(new BaseResponse(false, "Автор не был найден и не был удален"));
+            }
         } catch (Exception e) {
-            return ResponseEntity.ok(new BaseResponse(false, "Автор не был удален\n" + e.getMessage()));
+            return ResponseEntity.badRequest().body(new BaseResponse(false, "Автор не был удален" + e.getMessage()));
         }
     }
 }

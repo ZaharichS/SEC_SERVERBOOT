@@ -29,4 +29,8 @@ public class UserService {
     public void update(UserEntity data) {
         repo.save(data);
     }
+
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
 }

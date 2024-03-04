@@ -30,7 +30,7 @@ public class AuthorService {
         repo.save(data);
     }
 
-    public void delele(Long id) {
+    public void delete(Long id) {
         repo.deleteById(id);
     }
 }

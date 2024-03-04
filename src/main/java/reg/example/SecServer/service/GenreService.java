@@ -29,4 +29,8 @@ public class GenreService {
     public void update(GenreEntity data) {
         repo.save(data);
     }
+
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
 }
