@@ -1,6 +1,8 @@
 package reg.example.SecServer.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,9 @@ public class CityEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
+    @Pattern(regexp = "[А-Я][а-я]{1,20}")
     private String title;
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)

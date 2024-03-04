@@ -1,7 +1,9 @@
 package reg.example.SecServer.service;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import reg.example.SecServer.entity.AuthorEntity;
 import reg.example.SecServer.repo.AuthorRepo;
 
@@ -10,6 +12,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Validated
 public class AuthorService {
     private final AuthorRepo repo;
 
@@ -21,7 +24,7 @@ public class AuthorService {
         return repo.findById(id);
     }
 
-    public AuthorEntity save(AuthorEntity data) {
+    public AuthorEntity save(@Valid AuthorEntity data) {
         return repo.save(data);
     }
 
