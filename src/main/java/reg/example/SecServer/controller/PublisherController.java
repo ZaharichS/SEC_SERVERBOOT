@@ -1,5 +1,6 @@
 package reg.example.SecServer.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +15,26 @@ import reg.example.SecServer.service.PublisherService;
 
 import java.util.List;
 
-@Tag(name="Издания", description="Описание . . .")
+@Tag(name="Издания", description="Контроллер для работы с изданиями")
 @RequestMapping("api/v1/publisher")
 @RestController
 @AllArgsConstructor
 public class PublisherController {
     private final PublisherService service;
 
+    @Operation(
+            summary = "Вывод изданий",
+            description = "Позволяет вывести все издания"
+    )
     @GetMapping("/all")
     public ResponseEntity<ListResponse<PublisherEntity>> getAll() {
         return ResponseEntity.ok(new ListResponse<PublisherEntity>(true,"Издания", service.getAll()));
     }
 
+    @Operation(
+            summary = "Поиск издания",
+            description = "Параметризированный поиск по идентификатору"
+    )
     @GetMapping
     public  ResponseEntity<DataResponse<PublisherEntity>> by_id(@RequestParam Long id) {
         try {
@@ -39,6 +48,10 @@ public class PublisherController {
         }
     }
 
+    @Operation(
+            summary = "Регистрация издания",
+            description = "Позволяет добавить издание"
+    )
     @PostMapping
     public ResponseEntity<BaseResponse> save(@RequestBody PublisherEntity publisher) {
         try {
@@ -48,6 +61,10 @@ public class PublisherController {
         }
     }
 
+    @Operation(
+            summary = "Обновление издания",
+            description = "Изменяет текущие данные издания"
+    )
     @PutMapping
     public ResponseEntity<BaseResponse> update(@RequestBody PublisherEntity publisher) {
         try {
@@ -62,6 +79,10 @@ public class PublisherController {
         }
     }
 
+    @Operation(
+            summary = "Удаление издания",
+            description = "Позволяет удалить издание по идентификатору"
+    )
     @DeleteMapping
     public ResponseEntity<BaseResponse> deleteBy_id(@RequestParam Long id) {
         try {

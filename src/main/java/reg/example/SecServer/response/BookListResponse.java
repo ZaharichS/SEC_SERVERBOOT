@@ -1,5 +1,6 @@
 package reg.example.SecServer.response;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import reg.example.SecServer.entity.BookEntity;
 
 import java.util.List;
 
+@Hidden
 @Getter
 @Setter
 @NoArgsConstructor

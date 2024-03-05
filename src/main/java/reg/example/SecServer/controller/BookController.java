@@ -1,6 +1,8 @@
 package reg.example.SecServer.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +15,7 @@ import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.BookService;
 
 
-@Tag(name="Книги", description="Описание . . .")
+@Tag(name="Книги", description="Основной контроллер с книгами")
 @RequestMapping("api/v1/book")
 @RestController
 @AllArgsConstructor
@@ -24,6 +26,11 @@ public class BookController {
     public ResponseEntity<ListResponse<BookEntity>> getAll() {
         return ResponseEntity.ok(new ListResponse<BookEntity>(true,"Книги", service.getAll()));
     }*/
+
+    @Operation(
+            summary = "Вывод книг",
+            description = "Позволяет вывести все книги"
+    )
     @GetMapping("/all")
     public ResponseEntity<BaseResponse> getAll() {
         return ResponseEntity.ok(new ListResponse<BookEntity>(true,"Книги", service.getAll()));
@@ -41,8 +48,15 @@ public class BookController {
             return ResponseEntity.badRequest().body(new DataResponse<BookEntity>(false, "Книга не найдена", service.findById(id).orElseThrow()));
         }
     }*/
+
+    @Operation(
+            summary = "Поиск книги",
+            description = "Параметризированный поиск по идентификатору"
+    )
     @GetMapping
-    public ResponseEntity<BaseResponse> findBy_id(@RequestParam Long id) {
+    public ResponseEntity<BaseResponse> findBy_id(
+            @RequestParam @Parameter(description = "Идентификатор книги") Long id
+    ) {
         try {
             if (service.findById(id).isPresent()) {
                 return ResponseEntity.ok(new DataResponse<BookEntity>(true, "Найден книга", service.findById(id).orElseThrow()));
@@ -58,8 +72,15 @@ public class BookController {
     public ResponseEntity<DataResponse<BookEntity>> save(@RequestBody BookEntity book) {
         return ResponseEntity.ok(new DataResponse<BookEntity>(true, "Книга сохранена", service.save(book)));
     }*/
+
+    @Operation(
+            summary = "Регистрация книги",
+            description = "Позволяет добавить книгу"
+    )
     @PostMapping
-    public ResponseEntity<DataResponse<BookEntity>> save(@RequestBody BookEntity book) {
+    public ResponseEntity<DataResponse<BookEntity>> save(
+            @RequestBody @Parameter(description = "Новая книга") BookEntity book
+    ) {
         try {
             return ResponseEntity.ok(new DataResponse<BookEntity>(true, "Книга сохранена", service.save(book)));
         } catch (RuntimeException e) {
@@ -80,8 +101,15 @@ public class BookController {
             return ResponseEntity.badRequest().body(new BaseResponse(false, "Книга не была обновлена"));
         }
     }*/
+
+    @Operation(
+            summary = "Обновление книги",
+            description = "Изменяет текущие данные книги"
+    )
     @PutMapping
-    public ResponseEntity<BaseResponse> update(@RequestBody BookEntity book) {
+    public ResponseEntity<BaseResponse> update(
+            @RequestBody @Parameter(description = "Обновляемая книга") BookEntity book
+    ) {
         try {
             if (service.findById(book.getId()).isPresent()) {
                 service.update(book);
@@ -107,8 +135,15 @@ public class BookController {
             return ResponseEntity.badRequest().body(new BaseResponse(false, "Книга не удалена" + e.getMessage()));
         }
     }*/
+
+    @Operation(
+            summary = "Удаление книги",
+            description = "Позволяет удалить книгу"
+    )
     @DeleteMapping
-    public ResponseEntity<BaseResponse> deleteBy_id(@RequestParam Long id) {
+    public ResponseEntity<BaseResponse> deleteBy_id(
+            @RequestParam @Parameter(description = "Идентификатор книги") Long id
+    ) {
         try {
             if (service.findById(id).isPresent()) {
                 service.delete(id);
@@ -126,9 +161,15 @@ public class BookController {
         return ResponseEntity.ok( new BookListResponse(true, "Книга найдена",service.findByPublisher(title,city)) );
     }*/
 
+    @Operation(
+            summary = "Поиск книги по параметру (1)",
+            description = "Позволяет найти книгу по идентификатору автора"
+    )
     // Поиск по id автора
     @GetMapping("/author")
-    public ResponseEntity<BookListResponse> getBy_authorId(@RequestParam Long id) {
+    public ResponseEntity<BookListResponse> getBy_authorId(
+            @RequestParam @Parameter(description = "Идентификатор автора") Long id
+    ) {
         try {
             if (!service.findByAuthorId(id).isEmpty()) {
                 return ResponseEntity.ok(new BookListResponse(true, "Книга найдена", service.findByAuthorId(id)));
@@ -141,9 +182,15 @@ public class BookController {
         }
     }
 
+    @Operation(
+            summary = "Поиск книги по параметру (2)",
+            description = "Позволяет найти книгу по названию"
+    )
     // Поиск по названию книги
     @GetMapping("/{title}")
-    public ResponseEntity<BookListResponse> findByTitle(@PathVariable String title) {
+    public ResponseEntity<BookListResponse> findByTitle(
+            @PathVariable @Parameter(description = "Название книги") String title
+    ) {
         try {
             if (!service.findByTitle(title).isEmpty()) {
                 return ResponseEntity.ok(new BookListResponse(true, "Книга найдена", service.findByTitle(title)));

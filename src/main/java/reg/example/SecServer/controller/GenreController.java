@@ -1,5 +1,6 @@
 package reg.example.SecServer.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,18 +14,26 @@ import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.CityService;
 import reg.example.SecServer.service.GenreService;
 
-@Tag(name="Жанр", description="Описание . . .")
+@Tag(name="Жанр", description="Контроллер для работы с жанром книг")
 @RequestMapping("api/v1/genre")
 @RestController
 @AllArgsConstructor
 public class GenreController {
     private final GenreService service;
 
+    @Operation(
+            summary = "Вывод жанров",
+            description = "Позволяет вывести все жанры"
+    )
     @GetMapping("/all")
     public ResponseEntity<ListResponse<GenreEntity>> getAll() {
         return ResponseEntity.ok(new ListResponse<GenreEntity>(true,"Жанры", service.getAll()));
     }
 
+    @Operation(
+            summary = "Поиск жанра",
+            description = "Параметризированный поиск по идентификатору"
+    )
     @GetMapping
     public ResponseEntity<DataResponse<GenreEntity>> by_id(@RequestParam Long id) {
         try {
@@ -38,6 +47,10 @@ public class GenreController {
         }
     }
 
+    @Operation(
+            summary = "Регистрация жанра",
+            description = "Позволяет добавить жанр"
+    )
     @PostMapping
     public ResponseEntity<BaseResponse> save(@RequestBody GenreEntity genre) {
         try {
@@ -47,6 +60,10 @@ public class GenreController {
         }
     }
 
+    @Operation(
+            summary = "Обновление жанра",
+            description = "Изменяет текущие данные жанра"
+    )
     @PutMapping
     public ResponseEntity<BaseResponse> update(@RequestBody GenreEntity genre) {
         try {
@@ -61,6 +78,10 @@ public class GenreController {
         }
     }
 
+    @Operation(
+            summary = "Удаление жанра",
+            description = "Позволяет удалить жанр по идентификатору"
+    )
     @DeleteMapping
     public ResponseEntity<BaseResponse> deleteBy_id(@RequestParam Long id) {
         try {

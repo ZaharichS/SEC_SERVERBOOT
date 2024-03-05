@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 @OpenAPIDefinition(
         info = @Info(
                 title = "DataBase spring-boot application",
-                description = "База данных на Spring booooooot", version = "0.0.0.1"
+                description = "База данных на Spring boot", version = "0.0.0.1"
         )
 )
 public class OpenApiConfig {

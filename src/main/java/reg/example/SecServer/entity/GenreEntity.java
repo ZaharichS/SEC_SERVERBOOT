@@ -1,6 +1,7 @@
 package reg.example.SecServer.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import java.util.List;
 
+@Schema(description = "Сущность жанр")
 @Entity
 @Getter
 @Setter

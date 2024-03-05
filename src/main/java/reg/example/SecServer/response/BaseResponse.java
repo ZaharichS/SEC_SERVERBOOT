@@ -1,7 +1,9 @@
 package reg.example.SecServer.response;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.*;
 
+@Hidden
 @Getter
 @Setter
 @AllArgsConstructor

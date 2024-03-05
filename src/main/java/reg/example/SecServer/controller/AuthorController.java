@@ -11,7 +11,7 @@ import reg.example.SecServer.response.DataResponse;
 import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.AuthorService;
 
-@Tag(name="Авторы", description="Описание . . .")
+@Tag(name="Авторы", description="Контроллер для работы с авторами")
 @RequestMapping("api/v1/author")
 @RestController
 @AllArgsConstructor
@@ -43,7 +43,7 @@ public class AuthorController {
     // find by id
     @Operation(
             summary = "Поиск автора",
-            description = "Параметризированный поиск по айдишнику"
+            description = "Параметризированный поиск по идентификатору"
     )
     @GetMapping
     public ResponseEntity<DataResponse<AuthorEntity>> by_id(@RequestParam Long id) {
