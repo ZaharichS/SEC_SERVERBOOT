@@ -1,10 +1,10 @@
 package reg.example.SecServer.controller;
 
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reg.example.SecServer.entity.AuthorEntity;
 import reg.example.SecServer.entity.BookEntity;
 import reg.example.SecServer.response.BaseResponse;
 import reg.example.SecServer.response.BookListResponse;
@@ -13,7 +13,7 @@ import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.BookService;
 
 
-
+@Tag(name="Книги", description="Описание . . .")
 @RequestMapping("api/v1/book")
 @RestController
 @AllArgsConstructor
@@ -42,7 +42,7 @@ public class BookController {
         }
     }*/
     @GetMapping
-    public ResponseEntity<BaseResponse> by_id(@RequestParam Long id) {
+    public ResponseEntity<BaseResponse> findBy_id(@RequestParam Long id) {
         try {
             if (service.findById(id).isPresent()) {
                 return ResponseEntity.ok(new DataResponse<BookEntity>(true, "Найден книга", service.findById(id).orElseThrow()));
@@ -121,8 +121,37 @@ public class BookController {
         }
     }
 
-    @GetMapping
+/*    @GetMapping
     public ResponseEntity<BookListResponse> getBy_publisher(@RequestParam String title, @RequestParam String city) {
         return ResponseEntity.ok( new BookListResponse(true, "Книга найдена",service.findByPublisher(title,city)) );
+    }*/
+
+    // Поиск по id автора
+    @GetMapping("/author")
+    public ResponseEntity<BookListResponse> getBy_authorId(@RequestParam Long id) {
+        try {
+            if (!service.findByAuthorId(id).isEmpty()) {
+                return ResponseEntity.ok(new BookListResponse(true, "Книга найдена", service.findByAuthorId(id)));
+            } else {
+                return ResponseEntity.ok(new BookListResponse(false, "Книга не найдена", null));
+            }
+        } catch (RuntimeException e) {
+//            return ResponseEntity.ok(new BookListResponse(false, "Книга не найдена", null));
+            return ResponseEntity.badRequest().body(new BookListResponse(false, e.getMessage(), null));
+        }
+    }
+
+    // Поиск по названию книги
+    @GetMapping("/{title}")
+    public ResponseEntity<BookListResponse> findByTitle(@PathVariable String title) {
+        try {
+            if (!service.findByTitle(title).isEmpty()) {
+                return ResponseEntity.ok(new BookListResponse(true, "Книга найдена", service.findByTitle(title)));
+            } else {
+                return ResponseEntity.ok(new BookListResponse(false, "Книга не найдена", null));
+            }
+        } catch (RuntimeException e ) {
+            return ResponseEntity.badRequest().body(new BookListResponse(false, e.getMessage(), null));
+        }
     }
 }

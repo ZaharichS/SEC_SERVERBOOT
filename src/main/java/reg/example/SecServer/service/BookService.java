@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import reg.example.SecServer.entity.BookEntity;
 import reg.example.SecServer.repo.BookRepo;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,17 @@ public class BookService {
     }
 
     // Поиск по двум пар-ам
-    public Iterable<BookEntity> findByPublisher(String title, String city) {
-        return repo.findDistinctByPublishing_PublisherOrPublisher_City(title, city);
+/*    public Iterable<BookEntity> findByPublisher(String title, String city) {
+        return repo.findDistinctByPublishing_PublisherOrPublishing_City(title, city);
+    }*/
+
+    // Поиск по id автора
+    public List<BookEntity> findByAuthorId (Long id) {
+        return repo.findBookEntityByAuthor_Id(id);
+    }
+
+    // Поиск по названию книги
+    public List<BookEntity> findByTitle(String title) {
+        return repo.findBookEntityByTitle(title);
     }
 }

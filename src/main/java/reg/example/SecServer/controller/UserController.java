@@ -1,5 +1,6 @@
 package reg.example.SecServer.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import reg.example.SecServer.service.UserService;
 
 // ОБНОВИТЬ ДАННЫЙ КЛАСС
 // СТАРЫЕ МЕТОДЫ
+@Tag(name="Пользователь", description="Описание . . .")
 @RequestMapping("api/v1/user")
 @RestController
 @AllArgsConstructor

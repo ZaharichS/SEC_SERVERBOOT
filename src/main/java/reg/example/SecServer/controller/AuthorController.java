@@ -1,5 +1,7 @@
 package reg.example.SecServer.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +11,17 @@ import reg.example.SecServer.response.DataResponse;
 import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.AuthorService;
 
+@Tag(name="Авторы", description="Описание . . .")
 @RequestMapping("api/v1/author")
 @RestController
 @AllArgsConstructor
 public class AuthorController {
     private final AuthorService service;
 
+    @Operation(
+            summary = "Вывод авторов",
+            description = "Позволяет вывести всех авторов"
+    )
     @GetMapping("/all")
     public ResponseEntity<ListResponse<AuthorEntity>> getAll() {
         return ResponseEntity.ok(new ListResponse<AuthorEntity>(true,"Авторы", service.getAll()));
@@ -34,6 +41,10 @@ public class AuthorController {
     }*/
 
     // find by id
+    @Operation(
+            summary = "Поиск автора",
+            description = "Параметризированный поиск по айдишнику"
+    )
     @GetMapping
     public ResponseEntity<DataResponse<AuthorEntity>> by_id(@RequestParam Long id) {
         try {
@@ -53,6 +64,10 @@ public class AuthorController {
     }*/
 
     // add new author
+    @Operation(
+            summary = "Регистрация автора",
+            description = "Позволяет добавить автора"
+    )
     @PostMapping
     public ResponseEntity<DataResponse<AuthorEntity>> save(@RequestBody AuthorEntity author) {
         try {
@@ -77,6 +92,10 @@ public class AuthorController {
     }*/
 
     // update
+    @Operation(
+            summary = "Обновление автора",
+            description = "Изменяет текущие данные автора"
+    )
     @PutMapping
     public ResponseEntity<BaseResponse> update(@RequestBody AuthorEntity author) {
         try {
@@ -105,6 +124,10 @@ public class AuthorController {
         }
     }*/
 
+    @Operation(
+            summary = "Удаление автора",
+            description = "Позволяет удалить автора"
+    )
     @DeleteMapping
     public ResponseEntity<BaseResponse> deleteBy_id(@RequestParam Long id) {
         try {

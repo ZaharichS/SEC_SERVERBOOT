@@ -14,9 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 public class BookListResponse extends BaseResponse {
 
-    private Iterable<BookEntity> data;
+    private List<BookEntity> data;
 
-    public BookListResponse(boolean status, String status_text, Iterable<BookEntity> data) {
+    public BookListResponse(boolean status, String status_text, List<BookEntity> data) {
         super(status, status_text);
         this.data = data;
     }

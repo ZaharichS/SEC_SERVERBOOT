@@ -1,5 +1,6 @@
 package reg.example.SecServer.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import reg.example.SecServer.service.PublisherService;
 
 import java.util.List;
 
+@Tag(name="Издания", description="Описание . . .")
 @RequestMapping("api/v1/publisher")
 @RestController
 @AllArgsConstructor

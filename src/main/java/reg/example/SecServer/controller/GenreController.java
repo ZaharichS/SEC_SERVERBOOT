@@ -1,5 +1,6 @@
 package reg.example.SecServer.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import reg.example.SecServer.response.ListResponse;
 import reg.example.SecServer.service.CityService;
 import reg.example.SecServer.service.GenreService;
 
+@Tag(name="Жанр", description="Описание . . .")
 @RequestMapping("api/v1/genre")
 @RestController
 @AllArgsConstructor
