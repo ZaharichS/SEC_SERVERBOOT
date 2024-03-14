@@ -183,6 +183,27 @@ public class BookController {
     }
 
     @Operation(
+            summary = "Поиск книги по параметру (3)",
+            description = "Позволяет найти книгу по автору"
+    )
+    // Поиск по id автора
+    @GetMapping("/{author}")
+    public ResponseEntity<BookListResponse> getBy_authorSurname(
+            @RequestParam @Parameter(description = "Aвтора") String surname
+    ) {
+        try {
+            if (!service.findByAuthorSurname(surname).isEmpty()) {
+                return ResponseEntity.ok(new BookListResponse(true, "Книга найдена", service.findByAuthorSurname(surname)));
+            } else {
+                return ResponseEntity.ok(new BookListResponse(false, "Книга не найдена", null));
+            }
+        } catch (RuntimeException e) {
+//            return ResponseEntity.ok(new BookListResponse(false, "Книга не найдена", null));
+            return ResponseEntity.badRequest().body(new BookListResponse(false, e.getMessage(), null));
+        }
+    }
+
+    @Operation(
             summary = "Поиск книги по параметру (2)",
             description = "Позволяет найти книгу по названию"
     )

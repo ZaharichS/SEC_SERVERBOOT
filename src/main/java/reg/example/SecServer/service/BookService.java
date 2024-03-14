@@ -48,6 +48,11 @@ public class BookService {
         return repo.findBookEntityByAuthor_Id(id);
     }
 
+    // Поиск по фамилии автора
+    public List<BookEntity> findByAuthorSurname (String surname) {
+        return repo.findBookEntityByAuthor_Author_surname(surname);
+    }
+
     // Поиск по названию книги
     public List<BookEntity> findByTitle(String title) {
         return repo.findBookEntityByTitle(title);
